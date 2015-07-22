@@ -5,7 +5,7 @@ angular.module('infotap.services', ['ngResource'])
         user:{},
         envIs:"web",
         //apiBaseUrl:"http://doparttime.cloudapp.net/api/",
-        apiBaseUrl:"http://localhost/infotap.web/web/api/",
+        apiBaseUrl:"http://localhost/infotapapi/web/api/",
         aadharId:0,
         paramdata:{},
         feeds : [],

@@ -159,6 +159,15 @@ angular.module('infotap', ['ionic', 'infotap.controllers', 'infotap.services','n
       }
     }
   })
+  .state('base.logout', {
+    url: '/logout',
+    views: {
+      'mainContent': {
+        templateUrl: 'templates/logout.html',
+        controller: 'LogoutController'
+      }
+    }
+  })
   .state('base.categories', {
     url: "/categories",
     views: {

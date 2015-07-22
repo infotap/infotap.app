@@ -74,6 +74,26 @@ angular.module('infotap.controllers', ['ngResource', 'ngCordova'])
             Globals.showPopupMessage('Server Error', '', '<center>Some thing went wrong</center>');
         });
 })
+
+.controller('LogoutController', function($rootScope, $scope, $ionicHistory, $state, Globals, $localstorage, $http) {
+  $scope.isLoading = true;
+  var data = {};
+  data.token = $localstorage.get('accessToken');
+  $http.post(Globals.apiBaseUrl + 'logout', data)
+      .success(function(data, status, headers, config) {
+          $localstorage.setObject('user',null);
+          Globals.user = null;
+          $localstorage.set('isLoggedIn', false);
+          Globals.isLoggedIn = false;
+          $ionicHistory.nextViewOptions({
+              disableBack: true
+          });
+          $state.go('base.home');
+      }).error(function(data, status, headers, config) {
+          Globals.showNativePopupMessage('Some thing went wrong', 'Server Error');
+      });
+})
+
 .controller('DepartmentsCtrl', function($ionicScrollDelegate,$scope, $stateParams,Globals, Departments,$http) {
     $scope.isLoading=true;
     $scope.isSaveButtonDisabled=false;
@@ -129,9 +149,8 @@ angular.module('infotap.controllers', ['ngResource', 'ngCordova'])
   $scope.register = function(formdata) {
     var currentLocObj = Globals.searchLocationObj;
     if(formdata){
-    //if ((Globals.isOnline() && Globals.envIs == "app") || Globals.envIs == "web") {
       var paramdata={};
-      if(formdata.uid){
+      if(formdata.mobile){
         $scope.isSaveButtonDisabled=true;
         paramdata.uid=formdata.uid;
         if(formdata.name){paramdata.name=formdata.name;}
@@ -152,14 +171,17 @@ angular.module('infotap.controllers', ['ngResource', 'ngCordova'])
             if (responsedata.success == true) {
                 $state.go('base.register2');
             }else{
+              $scope.isSaveButtonDisabled=false;
                 Globals.showNativePopupMessage(responsedata.message,'Error');
             }
           }).
           error(function(responsedata, status, headers, config) {
+            $scope.isSaveButtonDisabled=false;
             console.log(JSON.stringify(status));//+JSON.stringify(status)+JSON.stringify(headers)+JSON.stringify(config));
           });
+      }else{
+        Globals.showNativePopupMessage("mobile number is mandatory",'info');
       }
-    //}
     }
   };
 })
